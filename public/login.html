@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Mingle Revived</title>
+		<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+	</head>
+	<body>
+		<main>
+			<header><h1>Welcome To Mingle Revive</h1></header>
+			<div class="signInBox">
+				<h2>Sign In</h2>
+				<form
+					action="/dashboard.html"
+					method="POST"
+					style="width:270px;margin:0 auto"
+				>
+					<lable>Username:</lable> <br />
+					<input
+						type="text"
+						name="userName"
+						placeholder="Enter your username"
+						style="width:240px; height:30px;font-size: 20px;border-radius:7.25px"
+					/>
+					<br />
+					<br />
+					<lable>Password:</lable><br />
+					<input
+						type="password"
+						name="passWord"
+						placeholder="password"
+						style="width:240px; height:30px;font-size: 20px;border-radius: 7.25px"
+					/>
+					<br />
+					<br />
+					<input
+						type="submit"
+						name="sign_in"
+						value="Sign In"
+						style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px"
+					/>
+				</form>
+			</div>
+		</main>
+	</body>
+</html>
