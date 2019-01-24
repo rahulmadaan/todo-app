@@ -1,6 +1,6 @@
 body {
 	font-family: sans-serif;
-	background-color: antiquewhite;
+	background-color: rgb(12, 161, 161);
 }
 main {
 	width: 960px;
@@ -9,14 +9,14 @@ main {
 
 header {
 	text-align: center;
-	color: darkblue;
+	color: rgb(78, 9, 189);
 }
 
 .signInBox {
 	width: 480px;
 	height: 480px;
 	margin: 0 auto;
-	background-color: white;
+	background-color: rgb(203, 277, 235);
 	border: 1px solid black;
 	text-align: center;
 	font-size: 20px;
