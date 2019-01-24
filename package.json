@@ -1,0 +1,15 @@
+{
+  "name": "what-to-do-app",
+  "version": "1.0.0",
+  "description": "an application for maintaining to-do-list",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "author": "Rahul Madaan and Deepika",
+  "license": "ISC"
+}
