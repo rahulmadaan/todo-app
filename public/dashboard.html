@@ -4,15 +4,19 @@
 		<title>Mingle-Dashboard</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 	</head>
-	<body>
+	<body style="background-color: rgb(15, 147, 199)">
 		<script src="./dashboard.js"></script>
 		<main>
-			<header><h1>Dashboard</h1></header>
+			<header class="mingleThemeHeader"><h1>Dashboard</h1></header>
 		</main>
-		<div style="display: flex; align-items:unset">
-			<div class="manageLists">Create New List</div>
+		<div
+			style="display: flex;justify-content: space-between;width:480px;margin: 100px auto"
+		>
+			<a href="createNewList.html"
+				><div class="manageLists">Create New List</div></a
+			>
 			<br />
-			<a href="viewList.html">
+			<a href="viewList.html" style="text-decoration: none">
 				<div class="manageLists">View Existing Lists</div>
 			</a>
 		</div>

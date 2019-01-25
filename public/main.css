@@ -1,15 +1,15 @@
-body {
+.mingleThemeBody {
 	font-family: sans-serif;
 	background-color: rgb(12, 161, 161);
 }
-main {
+.mingleMain {
 	width: 960px;
 	margin: 0 auto;
 }
 
-header {
+.mingleThemeHeader {
 	text-align: center;
-	color: rgb(78, 9, 189);
+	color: rgb(6, 97, 3);
 }
 
 .signInBox {
@@ -23,9 +23,31 @@ header {
 }
 
 .manageLists {
-	width: 200px;
-	height: 200px;
+	width: 150px;
+	height: 150px;
 	border: 1px solid black;
 	background-color: white;
 	text-align: center;
+	font-size: 25px;
+}
+
+.toDoLists {
+	width: 750px;
+	margin: 50px auto;
+}
+
+.toDoLists td {
+	width: 640px;
+	height: 50px;
+	border: 1px solid black;
+	text-align: center;
+	font-size: 25px;
+	letter-spacing: 2px;
+}
+
+.veiwListHeader {
+	text-align: center;
+	background-color: rgb(103, 187, 255);
+	font-size: 30px;
+	font-family: cursive;
 }
