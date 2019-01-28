@@ -44,10 +44,51 @@
 	font-size: 25px;
 	letter-spacing: 2px;
 }
-
+.addNewList {
+	width: 1000px;
+	height: 50px;
+	text-align: center;
+	margin: 0 auto;
+}
 .veiwListHeader {
 	text-align: center;
 	background-color: rgb(103, 187, 255);
 	font-size: 30px;
 	font-family: cursive;
+}
+
+.printList {
+	width: 250px;
+	height: 250px;
+	margin: 20px;
+	border: 1px solid black;
+}
+#listBlock {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	width: 1140px;
+	height: 720px;
+}
+
+.inputTitle {
+	width: 200px;
+	height: 40px;
+	text-align: center;
+	margin-right: 25px;
+	border-radius: 10px;
+}
+
+.inputDescription {
+	width: 500px;
+	text-align: center;
+	height: 40px;
+	border-radius: 10px;
+	margin-right: 25px;
+}
+
+.inputButton {
+	font-size: 35px;
+	height: 500px;
+	width: 120px;
 }

@@ -1,5 +1,6 @@
 const isMatching = (req, route) => {
 	if (route.method && req.method != route.method) return false;
+	if (route.url instanceof RegExp && route.url.test(req.url)) return true;
 	if (route.url && req.url != route.url) return false;
 	return true;
 };
@@ -22,6 +23,7 @@ class RequestHandler {
 	}
 	handleRequest(req, res) {
 		let remaining = this.routes.filter(r => isMatching(req, r));
+		console.log('routes are',remaining);
 
 		let next = () => {
 			let current = remaining[0];

@@ -53,12 +53,6 @@ const serveFile = function(req, res, next) {
 	});
 };
 
-const render404Page = function(req, res) {
-	fs.readFile('./public/notFound.html', (error, content) => {
-		send(res, content, 404);
-	});
-};
-
 const parseUserDetails = function(userDetails) {
 	const args = {};
 	const splittedDetails = userDetails.split('&');
@@ -91,8 +85,8 @@ const getUserIdByCookie = function(cookie) {
 	return splittedCookie[1];
 };
 
-const createRow = function(contents) {
-	return `<tr><td>${contents}</td></tr>`;
+const createRow = function(contents, listId, userId) {
+	return `<a href="/viewTasks.html?listId=${listId}"><div id='${contents}' class='printList'></div><p>${contents}</p></a>`;
 };
 
 const parseList = function(cookie, jsonList) {
@@ -101,7 +95,7 @@ const parseList = function(cookie, jsonList) {
 	let html = '';
 	const requiredList = listDetails[userId];
 	const titleList = requiredList.map(list => {
-		html += createRow(list.title);
+		html += createRow(list.title, list.listId, userId);
 	});
 	return html;
 };
@@ -116,7 +110,6 @@ const viewList = function(req, res, next) {
 const parseListDetails = function(listDetails) {
 	const args = {};
 	const splittedDetails = listDetails.split('&');
-
 	const mappedDetails = splittedDetails.map(details => details.split('='));
 	mappedDetails.map(key => {
 		args[key[0]] = key[1];
@@ -124,21 +117,39 @@ const parseListDetails = function(listDetails) {
 	return args;
 };
 
+const addIdentity = function(listToIdentify) {
+	const prefix = 'm_r-';
+	const numeric = Date.now();
+	const postfix = '-l';
+	listToIdentify.listId = prefix + numeric + postfix;
+	return listToIdentify;
+};
 const addNewList = function(req, res, next) {
 	const userId = getUserIdByCookie(req.headers.cookie);
-	const newList = parseListDetails(req.body);
+	const newListItem = parseListDetails(req.body);
+	const enhancedListItem = addIdentity(newListItem);
 	readFile('./data/listsDetails.json', (err, lists) => {
 		const ourCopy = JSON.parse(lists);
-		ourCopy[userId].push(newList);
+		ourCopy[userId].push(enhancedListItem);
 		writeFile('./data/listsDetails.json', JSON.stringify(ourCopy), err => {});
 	});
 	next();
 };
 
+const getTasks = function(req, res) {
+	res.write('');
+	res.end();
+};
+
 app.use(readBody);
 app.use(logRequests);
-app.post('/dashboard.html', validateUser);
+
+app.post('/dashboard.html', addNewList);
+
 app.get('/viewList', viewList);
-app.post('/viewList.html', addNewList);
+// app.post('/dashboard.html', validateUser);
+
+app.get(/\/viewTasks.html\?listId=/, getTasks);
+
 app.use(serveFile);
 module.exports = app.handleRequest.bind(app);

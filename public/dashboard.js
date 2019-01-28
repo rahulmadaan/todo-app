@@ -1,9 +1,11 @@
-const viewList = function() {
+const getLists = function() {
 	fetch('/viewList')
-		.then(function(response) {
-			return response.text();
+		.then(function(res) {
+			return res.text();
 		})
-		.catch(function(err) {
-			if (err) throw err;
+		.then(function(out) {
+			document.getElementById('listBlock').innerHTML = out;
 		});
 };
+
+window.onload = getLists;

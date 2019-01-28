@@ -4,7 +4,7 @@ const getLists = function() {
 			return res.text();
 		})
 		.then(function(out) {
-			document.getElementById('listBody').innerHTML = out;
+			document.getElementById('printList').innerHTML = out;
 		});
 };
 
@@ -13,4 +13,3 @@ const initializer = function() {
 };
 
 window.onload = initializer;
-exports.viewListHTML = viewListHTML;

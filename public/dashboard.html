@@ -8,17 +8,27 @@
 		<script src="./dashboard.js"></script>
 		<main>
 			<header class="mingleThemeHeader"><h1>Dashboard</h1></header>
+			<hr />
+			<div class="addNewList">
+				<form action="/dashboard.html" method="POST" class="newListForm">
+					<input
+						type="text"
+						name="title"
+						placeholder="Add Title"
+						class="inputTitle"
+						required
+					/>
+					<input
+						type="text"
+						name="description"
+						placeholder="Add description"
+						class="inputDescription"
+						required
+					/>
+					<input type="submit" value="Add New List" class="inputButton" />
+				</form>
+			</div>
 		</main>
-		<div
-			style="display: flex;justify-content: space-between;width:480px;margin: 100px auto"
-		>
-			<a href="addNewList.html" style="text-decoration: none; color:black"
-				><div class="manageLists">Create New List</div></a
-			>
-			<br />
-			<a href="viewList.html" style="text-decoration: none;color:black">
-				<div class="manageLists">View Existing Lists</div>
-			</a>
-		</div>
+		<div id="listBlock"></div>
 	</body>
 </html>
