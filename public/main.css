@@ -54,7 +54,6 @@
 	text-align: center;
 	background-color: rgb(103, 187, 255);
 	font-size: 30px;
-	font-family: cursive;
 }
 
 .printList {
@@ -106,7 +105,6 @@
 	width: 840px;
 	height: 200px;
 	font-size: 25px;
-	font-family: cursive;
 }
 .taskList {
 	height: 50px;
@@ -119,7 +117,7 @@
 .taskList tr {
 	/* outline: thin solid; */
 	margin: 30px;
-	
+
 	/* outline-style: auto; */
 }
 .taskList td {
