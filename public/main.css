@@ -10,6 +10,7 @@
 .mingleThemeHeader {
 	text-align: center;
 	color: rgb(6, 97, 3);
+	font-size: 150%;
 }
 
 .signInBox {
@@ -45,9 +46,8 @@
 	letter-spacing: 2px;
 }
 .addNewList {
-	width: 1000px;
-	height: 50px;
-	text-align: center;
+	width: 840px;
+	height: 220px;
 	margin: 0 auto;
 }
 .veiwListHeader {
@@ -62,13 +62,16 @@
 	height: 250px;
 	margin: 20px;
 	border: 1px solid black;
+	background-color: white;
 }
 #listBlock {
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;
-	width: 1140px;
+	text-align: center;
+	width: 960px;
 	height: 720px;
+	margin: 0 auto;
 }
 
 .inputTitle {
@@ -77,6 +80,7 @@
 	text-align: center;
 	margin-right: 25px;
 	border-radius: 10px;
+	font-size: 20px;
 }
 
 .inputDescription {
@@ -85,10 +89,41 @@
 	height: 40px;
 	border-radius: 10px;
 	margin-right: 25px;
+	font-size: 20px;
 }
 
 .inputButton {
 	font-size: 35px;
 	height: 500px;
 	width: 120px;
+}
+
+.newListForm {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	width: 840px;
+	height: 200px;
+	font-size: 25px;
+	font-family: cursive;
+}
+.taskList {
+	height: 50px;
+	width: 650px;
+	margin: 50px 340px;
+	background-color: white;
+	text-align: center;
+	font-size: 25px;
+}
+.taskList tr {
+	/* outline: thin solid; */
+	margin: 30px;
+	
+	/* outline-style: auto; */
+}
+.taskList td {
+	border: 1px solid black;
+	border-radius: 10px;
+	margin: 30px;
 }
