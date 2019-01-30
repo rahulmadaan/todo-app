@@ -1,124 +1,10 @@
 const { readFile, writeFile } = require('fs');
 const RequestHandler = require('./frameWork.js');
 const TASKS_DETAILS_FILE = './data/taskDetails.json';
-
+const { templates } = require('./template');
 const app = new RequestHandler();
-const logRequests = function(req, res, next) {
-	console.log(req.url);
-	console.log(req.method);
-	next();
-};
-
-const template = {
-	viewTask: `<html>
-	<head>
-		<title>Mingle-ViewList</title>
-		<link rel="stylesheet" href="main.css" />
-		<script src="viewTasks.js"></script>
-	</head>
-	<body>
-		<main>
-			<div class="viewListHeader" xz>
-				<header>
-					<h1><u>Your listName List</u></h1>
-					</header>
-					<hr />
-					</div>
-					<div class="toDoLists">
-					<table id="userLists">
-					<thead>
-					<td><strong>List Items</strong><button onclick=confirmDeletion() >&#x1F5D1</button></td>
-						</thead>						
-						</table>
-						<button type="submit" value='addTask' id="addNewTaskButton" onclick = addTaskInterface()> Create new Task</button>
-						<div id="addNewTask"></div>
-			</div>
-		</main>
-	</body>
-</html>
-`,
-	newTaskForm: `<form
-action="/addNewTask"
-method="POST"
-style="width:680px;
-margin: 0 auto;
-text-align:center;"
->
-<lable>Task Description:</lable> <br />
-<input
-	type="text"
-	name="taskDescription"
-	placeholder="Enter Task description"
-	style="width:240px; height:30px;font-size: 20px;border-radius:7.25px"
-/>
-<input
-	type="submit"
-	value="Save Task"
-	
-	style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px"
-/>
-</form>`,
-
-	confirmDeletion: listId => `<form
-	action=/deleteList?listId=${listId};
-method="POST"
-style="width:680px;
-margin: 0 auto;
-text-align:center;"
->
-<lable>Are you sure to Delete this list?</lable> <br />
-<input
-	type="submit"
-	value="Delete"
-	style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px"
-/>
-</form>`
-};
-
-const readBody = function(req, res, next) {
-	let text = '';
-	req.on('data', chunk => {
-		text = text + chunk;
-	});
-	req.on('end', () => {
-		req.body = text;
-		next();
-	});
-};
-
-const addPathPrefix = url => `./public${url}`;
-
-const getPath = function(url) {
-	let path = addPathPrefix(url);
-	if (url === '/') {
-		path = addPathPrefix('/login.html');
-	}
-	return path;
-};
-
-const send = function(res, content, statusCode = 200) {
-	res.statusCode = statusCode;
-	res.write(content);
-	res.end();
-	return;
-};
-
-const sendNotFound = function(res) {
-	return send(res, 'Page Not Found', 404);
-};
-
-const serveFile = function(req, res, next) {
-	let path = getPath(req.url);
-	readFile(path, (err, content) => {
-		if (!err) {
-			send(res, content);
-			next();
-			return;
-		}
-		sendNotFound(res);
-		return;
-	});
-};
+const { logRequests, serveFile, readBody } = require('./handler');
+const { send, sendNotFound } = require('./handlersUtility.js');
 
 const parseUserDetails = function(userDetails) {
 	const args = {};
@@ -266,19 +152,19 @@ const getTasks = function(req, res) {
 	readFile('./data/taskDetails.json', 'utf8', (err, contents) => {
 		const requiredTaskList = filterRequiredList(contents, userId, listId);
 		const html = parseTasks(requiredTaskList.task);
-		const form = template.viewTask;
+		const form = templates.viewTask;
 		send(res, form + html);
 	});
 };
 
 const renderNewTaskForm = function(req, res, next) {
-	const form = template.newTaskForm;
+	const form = templates.newTaskForm;
 	send(res, form);
 };
 
 const renderConfirmDeletionForm = function(req, res) {
 	const listId = extractListId(req.headers.referer);
-	const form = template.confirmDeletion(listId);
+	const form = templates.confirmDeletion(listId);
 	send(res, form);
 };
 
@@ -347,14 +233,18 @@ const deleteList = function(req, res) {
 
 app.use(readBody);
 app.use(logRequests);
+
 app.post('/login', validateUser);
+
 app.post('/dashboard.html', addNewList);
 app.get('/viewList', viewList);
-app.get(/\/viewTasks.html\?listId=/, getTasks);
-app.get('/newTaskForm', renderNewTaskForm);
-app.post('/addNewTask', addTaskInList);
 app.get('/confirmDeletion', renderConfirmDeletionForm);
 app.post(/\/deleteList\?listId=/, deleteList);
 
+app.get(/\/viewTasks.html\?listId=/, getTasks);
+app.get('/newTaskForm', renderNewTaskForm);
+app.post('/addNewTask', addTaskInList);
+
 app.use(serveFile);
+
 module.exports = app.handleRequest.bind(app);
