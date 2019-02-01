@@ -11,5 +11,9 @@
     "start": "node server.js"
   },
   "author": "Rahul Madaan and Deepika",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9"
+  }
 }
