@@ -1,6 +1,7 @@
 .mingleThemeBody {
 	font-family: sans-serif;
 	background-color: rgb(12, 161, 161);
+	display: flex;
 }
 .mingleMain {
 	width: 960px;
@@ -124,4 +125,10 @@
 	border: 1px solid black;
 	border-radius: 10px;
 	margin: 30px;
+}
+
+.loginPageImageBox {
+	width: 480px;
+	height: 480px;
+	margin: 0 0;
 }
