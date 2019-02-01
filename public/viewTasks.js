@@ -16,6 +16,7 @@ const addTaskInterface = function(){
 		.then(function(output) {
 			document.getElementById("addNewTask").innerHTML = output;
 			document.getElementById("addNewTaskButton").disabled = true;
+			document.getElementById("deleteList").disabled = true;
 		});
 };
 
@@ -27,7 +28,13 @@ const confirmDeletion = function(){
 	.then(function(output) {
 		document.getElementById("addNewTask").innerHTML = output;
 		document.getElementById("addNewTaskButton").disabled = true;
+		document.getElementById("deleteList").disabled = true;
 	});
+}
 
-
+const clearConfirmationDiv = function(){
+	console.log('hehhehe');
+	document.getElementById("addNewTask").innerHTML = "";
+	document.getElementById("addNewTaskButton").disabled = false;
+	document.getElementById("deleteList").disabled = false;
 }
