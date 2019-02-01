@@ -1,10 +1,26 @@
-const { readFile, writeFile } = require('fs');
+const { writeFile, readFileSync } = require('fs');
 const RequestHandler = require('./frameWork.js');
-const TASKS_DETAILS_FILE = './data/taskDetails.json';
+const { TASKS_DETAILS_FILE, LISTS_DETAILS_FILE } = require('./constants.js');
 const { templates } = require('./template');
 const app = new RequestHandler();
 const { logRequests, serveFile, readBody } = require('./handler');
-const { send, sendNotFound } = require('./handlersUtility.js');
+const { send } = require('./handlersUtility.js');
+const { Task } = require('./task.js');
+
+const allToDosTasks = JSON.parse(readFileSync(TASKS_DETAILS_FILE, 'utf8'));
+const usersToDos = JSON.parse(readFileSync('./data/listsDetails.json', 'utf8'));
+
+const writer = function(FILE_PATH, CONTENTS) {
+	writeFile(FILE_PATH, CONTENTS, err => {
+		if (err) throw err;
+	});
+};
+
+const extractToDoDetails = function(userIdSource, listIdSource) {
+	const userId = getUserIdByCookie(userIdSource);
+	const listId = extractListId(listIdSource);
+	return { userId, listId };
+};
 
 const parseUserDetails = function(userDetails) {
 	const args = {};
@@ -33,7 +49,7 @@ const validateUser = function(req, res, next) {
 		return;
 	}
 	res.setHeader('Location', '/');
-	send(res, 'Wrong user name and password', 302);
+	send(res, 'Wrong username and password', 302);
 };
 
 const getUserIdByCookie = function(cookie) {
@@ -42,25 +58,24 @@ const getUserIdByCookie = function(cookie) {
 };
 
 const createRow = function(contents, listId, userId) {
-	return `<a href="/viewTasks.html?listId=${listId}"><div id='${contents}' class='printList'></div><p>${contents}</p></a>`;
+	return `<a href="/viewTasks.html?listId=${listId}"><div id='${contents}'
+ class='printList'></div><p>${contents}</p></a>`;
 };
 
-const parseList = function(cookie, jsonList) {
+const parseList = function(cookie, listDetails) {
 	const userId = getUserIdByCookie(cookie);
-	const listDetails = JSON.parse(jsonList);
 	let html = '';
 	const requiredList = listDetails[userId];
-	const titleList = requiredList.map(list => {
+	requiredList.map(list => {
 		html += createRow(list.title, list.listId, userId);
 	});
 	return html;
 };
 
 const viewList = function(req, res, next) {
-	readFile('./data/listsDetails.json', (err, lists) => {
-		let table = parseList(req.headers.cookie, lists);
-		send(res, table);
-	});
+	const toDos = usersToDos;
+	let table = parseList(req.headers.cookie, toDos);
+	send(res, table);
 };
 
 const parseListDetails = function(listDetails) {
@@ -80,6 +95,7 @@ const addIdentity = function(listToIdentify, suffix = 'l') {
 	listToIdentify[suffix + 'Id'] = prefix + numeric + postfix;
 	return listToIdentify;
 };
+
 const getList = function(listItem) {
 	const parsedListItem = parseListDetails(listItem);
 	const enhancedListItem = addIdentity(parsedListItem, 'list');
@@ -87,24 +103,20 @@ const getList = function(listItem) {
 };
 
 const createInstanceInTaskDetails = function(userId, listId) {
-	readFile(TASKS_DETAILS_FILE, 'utf8', (err, contents) => {
-		const newInstance = { userId: userId, listId: listId, task: [] };
-		const parsedList = JSON.parse(contents);
-		parsedList.push(newInstance);
-		writeFile('./data/taskDetails.json', JSON.stringify(parsedList), err => {});
-	});
+	const newInstance = { userId: userId, listId: listId, task: [] };
+	const allTasks = allToDosTasks;
+	allTasks.unshift(newInstance);
+	writer(TASKS_DETAILS_FILE, JSON.stringify(allTasks));
 };
 
 const addNewList = function(req, res, next) {
 	const userId = getUserIdByCookie(req.headers.cookie);
 	const list = getList(req.body);
 	const listId = list.listId;
-	readFile('./data/listsDetails.json', (err, lists) => {
-		const ourCopy = JSON.parse(lists);
-		ourCopy[userId].push(list);
-		writeFile('./data/listsDetails.json', JSON.stringify(ourCopy), err => {});
-		createInstanceInTaskDetails(userId, listId);
-	});
+	const existingTodos = usersToDos; // think for a good name
+	existingTodos[userId].push(list);
+	writer(LISTS_DETAILS_FILE, JSON.stringify(existingTodos));
+	createInstanceInTaskDetails(userId, listId);
 	next();
 };
 
@@ -117,17 +129,17 @@ const filterRequiredList = function(
 	requiredUserid,
 	requiredListId
 ) {
-	const lists = JSON.parse(allTaskLists);
-	const requiredList = lists.filter(list => {
+	const requiredList = allTaskLists.filter(list => {
 		if (list.userId == requiredUserid && list.listId == requiredListId) {
 			return list;
 		}
 	});
 	return requiredList[0];
 };
+
 const giveStatus = function(statusBoolean) {
 	if (statusBoolean === 0) {
-		return 'To-Do';
+		return 'UnDone';
 	}
 	return 'Done';
 };
@@ -147,14 +159,12 @@ const parseTasks = function(requiredList) {
 };
 
 const getTasks = function(req, res) {
-	const listId = extractListId(req.url);
-	const userId = getUserIdByCookie(req.headers.cookie);
-	readFile('./data/taskDetails.json', 'utf8', (err, contents) => {
-		const requiredTaskList = filterRequiredList(contents, userId, listId);
-		const html = parseTasks(requiredTaskList.task);
-		const form = templates.viewTask;
-		send(res, form + html);
-	});
+	const contents = allToDosTasks;
+	const { userId, listId } = extractToDoDetails(req.headers.cookie, req.url);
+	const requiredTaskList = filterRequiredList(contents, userId, listId);
+	const html = parseTasks(requiredTaskList.task);
+	const form = templates.viewTask;
+	send(res, form + html);
 };
 
 const renderNewTaskForm = function(req, res, next) {
@@ -169,26 +179,22 @@ const renderConfirmDeletionForm = function(req, res) {
 };
 
 const updateTaskList = function(userId, listId, task) {
-	readFile(TASKS_DETAILS_FILE, 'utf8', (err, content) => {
-		const parsedTaskDetails = JSON.parse(content);
-		const filteredTaskDetails = parsedTaskDetails.filter(
-			taskList => taskList.listId == listId
-		);
-		const newTaskItem = { itemDescription: task, status: 0 };
-		const newTask = addIdentity(newTaskItem, 'task');
-		filteredTaskDetails[0].task.push(newTask);
-		writeFile(
-			'./data/taskDetails.json',
-			JSON.stringify(parsedTaskDetails),
-			err => {}
-		);
-	});
+	const parsedTaskDetails = allToDosTasks;
+	const filteredTaskDetails = parsedTaskDetails.filter(
+		taskList => taskList.listId == listId
+	);
+	const newTaskItem = { itemDescription: task, status: 0 };
+	const newTask = addIdentity(newTaskItem, 'task');
+	filteredTaskDetails[0].task.unshift(newTask);
+	writer(TASKS_DETAILS_FILE, JSON.stringify(parsedTaskDetails));
 };
 
 const addTaskInList = function(req, res, next) {
+	const { userId, listId } = extractToDoDetails(
+		req.headers.cookie,
+		req.headers.referer
+	);
 	const task = req.body.split('=')[1];
-	const userId = getUserIdByCookie(req.headers.cookie);
-	const listId = extractListId(req.headers.referer);
 	updateTaskList(userId, listId, task);
 	res.writeHead(302, {
 		location: req.headers.referer
@@ -196,42 +202,41 @@ const addTaskInList = function(req, res, next) {
 	res.end();
 };
 
-const updateListTasks = function(userId, listId) {
-	readFile(TASKS_DETAILS_FILE, 'utf8', (err, contents) => {
-		const parsedList = JSON.parse(contents);
-		const remainingTasks = parsedList.filter(
-			list => list['listId'] != listId && userId['userId'] != userId
-		);
-		writeFile(
-			'./data/taskDetails.json',
-			JSON.stringify(remainingTasks),
-			err => {}
-		);
-	});
+const removeDeletedListTasks = function(userId, listId) {
+	const parsedList = allToDosTasks;
+	const remainingTasks = parsedList.filter(
+		list => list['listId'] != listId && userId['userId'] != userId
+	);
+	writer(TASKS_DETAILS_FILE, JSON.stringify(remainingTasks));
 };
 
 const deleteList = function(req, res) {
-	const userId = getUserIdByCookie(req.headers.cookie);
-	const listId = extractListId(req.headers.referer);
-	readFile('./data/listsDetails.json', (err, lists) => {
-		const parsedList = JSON.parse(lists);
-		const usersToDos = parsedList[userId];
-		const remainingToDos = usersToDos.filter(list => list['listId'] != listId);
-		parsedList[userId] = remainingToDos;
-		writeFile(
-			'./data/listsDetails.json',
-			JSON.stringify(parsedList),
-			err => {}
-		);
-		updateListTasks(userId, listId);
-	});
+	const { userId, listId } = extractToDoDetails(
+		req.headers.cookie,
+		req.headers.referer
+	);
+	const allUsersToDos = usersToDos;
+	const currentUserToDos = allUsersToDos[userId];
+	const remainingToDos = currentUserToDos.filter(
+		list => list['listId'] != listId
+	);
+	allUsersToDos[userId] = remainingToDos;
+	writer(LISTS_DETAILS_FILE, JSON.stringify(allUsersToDos));
+	removeDeletedListTasks(userId, listId);
 	res.writeHead(302, {
 		location: '/dashboard.html'
 	});
 	res.end();
 };
 
+const formatContent = function(req, res, next) {
+	const content = decodeURIComponent(req.body);
+	req.body = content.replace(/['+']/g, ' ');
+	next();
+};
+
 app.use(readBody);
+app.use(formatContent);
 app.use(logRequests);
 
 app.post('/login', validateUser);

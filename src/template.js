@@ -1,22 +1,22 @@
 const templates = {
 	viewTask: `<html>
 	<head>
-		<title>Mingle-ViewList</title>
+		<title>What To-Do App  </title>
 		<link rel="stylesheet" href="main.css" />
 		<script src="viewTasks.js"></script>
 	</head>
 	<body>
 		<main>
 			<div class="viewListHeader" xz>
-				<header>
-					<h1><u>Your listName List</u></h1>
+				<header style="text-align:center">
+					<h1><u>Your List  <a href="/dashBoard.html">&#x1F3E0;</a></u></h1>
 					</header>
 					<hr />
 					</div>
 					<div class="toDoLists">
 					<table id="userLists">
 					<thead>
-					<td><strong>List Items</strong><button onclick=confirmDeletion() >&#x1F5D1</button></td>
+					<td><strong>List Items</strong><button onclick=confirmDeletion() id="deleteList">&#x1F5D1</button></td>
 						</thead>						
 						</table>
 						<button type="submit" value='addTask' id="addNewTaskButton" onclick = addTaskInterface()> Create new Task</button>
@@ -43,10 +43,10 @@ text-align:center;"
 />
 <input
 	type="submit"
-	value="Save Task"
-	
+	value="Save Task"	
 	style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px"
 />
+<button type="button" onclick = "clearConfirmationDiv()" style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px; margin-left:10px;">Cancel</button>
 </form>`,
 
 	confirmDeletion: listId => `<form
@@ -62,6 +62,7 @@ text-align:center;"
 	value="Delete"
 	style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px"
 />
+<button type="button" onclick = "clearConfirmationDiv()" style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px; margin-left:10px;">Cancel</button>
 </form>`
 };
 
