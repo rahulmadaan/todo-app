@@ -63,7 +63,40 @@ text-align:center;"
 	style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px"
 />
 <button type="button" onclick = "clearConfirmationDiv()" style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px; margin-left:10px;">Cancel</button>
+</form>`,
+
+	taskEditingForm: `<form
+	 action="/editTask"
+	 method="POST"
+style="width:680px;
+text-align:center;"
+>
+<lable>Task Description:</lable> <br />
+<hr>
+<textArea
+	id="taskEditingForm"
+	name = "taskDescription"
+	required
+	style="width:240px; height:30px;font-size: 20px;border-radius:7.25px"
+></textArea>
+<input
+type="hidden"
+value=""
+name = "taskId"
+id="hiddenTaskId"
+style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px"
+/>
+<button type="submit" style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px; margin-left:10px;">Save Changes</button>
+<button type="button" style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px; margin-left:10px;">Cancel</button>
 </form>`
 };
-
+{
+	/* <input
+	type="text"
+	name="taskDescription"
+	id="taskEditingForm"
+	required
+	style="width:240px; height:30px;font-size: 20px;border-radius:7.25px"
+/> */
+}
 module.exports = { templates };

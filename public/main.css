@@ -35,7 +35,6 @@
 
 .toDoLists {
 	width: 750px;
-	margin: 50px auto;
 }
 
 .toDoLists td {
@@ -110,17 +109,15 @@
 .taskList {
 	height: 50px;
 	width: 650px;
-	margin: 50px 340px;
 	background-color: white;
 	text-align: center;
 	font-size: 25px;
 }
-.taskList tr {
-	/* outline: thin solid; */
-	margin: 30px;
 
-	/* outline-style: auto; */
+.taskList tr {
+	margin: 30px;
 }
+
 .taskList td {
 	border: 1px solid black;
 	border-radius: 10px;
@@ -131,4 +128,8 @@
 	width: 480px;
 	height: 480px;
 	margin: 0 0;
+}
+
+.userLists {
+	display: flex;
 }
