@@ -202,10 +202,11 @@ const renderConfirmDeletionForm = function(req, res) {
 const updateTaskList = function(userId, listId, task) {
 	const currentToDoTasks = allToDosTasks;
 	const filteredTaskDetails = currentToDoTasks.reduce(
-		taskList => taskList.listId == listId
+		taskList => {if(taskList.listId == listId) return taskList;}
 	);
 	const taskId = generateId('task');
 	const newTaskItem = new Task(task, 0, taskId);
+	console.log('ye hai hamari filtered task details',filteredTaskDetails)
 	filteredTaskDetails.task.unshift(newTaskItem);
 	writer(TASKS_DETAILS_FILE, toString(currentToDoTasks));
 };
