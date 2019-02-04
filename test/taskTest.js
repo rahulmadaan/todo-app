@@ -1,4 +1,4 @@
-const { Task } = require('../src/task.js');
+const  Task  = require('../src/task.js');
 const assert = require('assert');
 describe('task', () => {
 	const toDoTask = new Task('wake up at 5 am', 0, 1234);
