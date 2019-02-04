@@ -181,7 +181,6 @@ const renderConfirmDeletionForm = function(req, res) {
 
 const updateTaskList = function(userId, listId, task) {
   const currentToDo = getRequestedEntity(usersToDos[userId].toDos, listId);
-  console.log("chandu pitaa", currentToDo);
   const taskId = generateId("task");
   const newTaskItem = new Task(task, 0, taskId);
   currentToDo.tasks.unshift(newTaskItem);
