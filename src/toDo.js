@@ -12,7 +12,7 @@ class ToDo {
     const toDoTasks = tasks.map(task => Task.parse(task));
     return new ToDo(title, description, id, toDoTasks);
   }
-  addTask(newTaskDescription, status, id) {
+  addTask(newTaskDescription, id,status = 0) {
     const latestTask = new Task(newTaskDescription, status, id);
     this.tasks.unshift(latestTask);
   }
