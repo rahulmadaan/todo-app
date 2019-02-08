@@ -3,29 +3,28 @@ const RequestHandler = require("./frameWork.js");
 const {
   TASKS_DETAILS_FILE,
   LISTS_DETAILS_FILE,
-  REDIRECTION_CODE
+  REDIRECTION_CODE,
+  DEFAULT_TASK_STATUS
 } = require("./constants.js");
 
 const { templates } = require("./template");
 const app = new RequestHandler();
 const { logRequests, serveFile, readBody } = require("./handler");
 const { send } = require("./handlersUtility.js");
-const Task = require("./task.js");
 const ToDo = require("./todo.js");
-const User = require("./user");
+const User = require("./user.js");
 const { toString, getUserIdByCookie, getFirstElement } = require("./util.js");
+
 const usersDetails = JSON.parse(readFileSync(LISTS_DETAILS_FILE, "utf8"));
+const userIds = Object.keys(usersDetails);
+userIds.map(user=>{
+  usersDetails[user] = User.parse(usersDetails[user]);
+});
 
 const writer = function(FILE_PATH, CONTENTS) {
   writeFile(FILE_PATH, CONTENTS, err => {
     if (err) throw err;
   });
-};
-
-const parseUserDetails = userId => {
-  const currentUser = User.parse(usersDetails[userId]);
-  usersDetails[userId] = currentUser;
-  return;
 };
 
 const extractToDoDetails = function(userIdSource, listIdSource) {
@@ -54,7 +53,6 @@ const validateUser = function(req, res, next) {
   const userDetails = parseUserInput(req.body);
   const userId = userDetails.username;
   if (isDetailsMatching(userDetails)) {
-    parseUserDetails(userId);
     res.writeHead(REDIRECTION_CODE, {
       Location: "/Dashboard.html",
       "Set-Cookie": "userId=rahulma"
@@ -169,13 +167,8 @@ const renderConfirmDeletionForm = function(req, res) {
 };
 
 const updateTaskList = function(userId, listId, taskDescription) {
-  // const currentToDo = getRequestedEntity(usersDetails[userId].toDos, listId);
   const taskId = generateId("task");
-  userDetails[userId].addToDoItem(listId,)
-  // const newTaskItem = usersDetails[userId];
-  // console.log("nya banda", newTaskItem);
-  const newTaskItem = new Task(taskDescription, 0, taskId);
-  currentToDo.tasks.unshift(newTaskItem);
+  usersDetails[userId].addToDoItem(listId, taskDescription,DEFAULT_TASK_STATUS , taskId);
   writer(LISTS_DETAILS_FILE, toString(usersDetails));
 };
 

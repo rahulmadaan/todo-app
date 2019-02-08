@@ -30,8 +30,8 @@ class User {
     const updatedToDo = this.getToDos().filter(toDo => toDo.id != toDoId);
     this.setTasks(updatedToDo);
   }
-  addToDoItem(toDoId, task) {
-    const { description, status, id } = task;
+  addToDoItem(toDoId, description, status, id) {
+    // const task = { description, status, id };
     const requiredTodo = this.getRequestedToDo(toDoId);
     requiredTodo.addTask(description, status, id);
   }
