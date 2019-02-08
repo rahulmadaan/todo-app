@@ -11,9 +11,9 @@ const { templates } = require("./template");
 const app = new RequestHandler();
 const { logRequests, serveFile, readBody } = require("./handler");
 const { send } = require("./handlersUtility.js");
-const ToDo = require("./todo.js");
+const ToDo = require("./toDo.js");
 const User = require("./user.js");
-const { toString, getUserIdByCookie, getFirstElement } = require("./util.js");
+const { toString, getUserIdByCookie, extractFirstElement } = require("./util.js");
 
 const usersDetails = JSON.parse(readFileSync(LISTS_DETAILS_FILE, "utf8"));
 const userIds = Object.keys(usersDetails);
@@ -137,9 +137,6 @@ const parseTasks = function(requiredList) {
   return html;
 };
 
-const extractFirstElement = function(record) {
-  return record[0];
-};
 const getRequestedEntity = function(entityList, requestedEntityId) {
   const requestedEntity = entityList.filter(
     toDo => toDo.id == requestedEntityId
