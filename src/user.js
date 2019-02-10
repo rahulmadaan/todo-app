@@ -31,7 +31,6 @@ class User {
     this.setTasks(updatedToDo);
   }
   addToDoItem(toDoId, description, status, id) {
-    // const task = { description, status, id };
     const requiredTodo = this.getRequestedToDo(toDoId);
     requiredTodo.addTask(description, status, id);
   }

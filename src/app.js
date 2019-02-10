@@ -13,11 +13,15 @@ const { logRequests, serveFile, readBody } = require("./handler");
 const { send } = require("./handlersUtility.js");
 const ToDo = require("./toDo.js");
 const User = require("./user.js");
-const { toString, getUserIdByCookie, extractFirstElement } = require("./util.js");
+const {
+  toString,
+  getUserIdByCookie,
+  extractFirstElement
+} = require("./util.js");
 
 const usersDetails = JSON.parse(readFileSync(LISTS_DETAILS_FILE, "utf8"));
 const userIds = Object.keys(usersDetails);
-userIds.map(user=>{
+userIds.map(user => {
   usersDetails[user] = User.parse(usersDetails[user]);
 });
 
@@ -99,15 +103,15 @@ const generateId = function(entity) {
 
 const getList = function(listItem) {
   const { title, description } = parseUserInput(listItem);
-  const toDoId = generateId("TD");
-  return new ToDo(title, description, toDoId);
+  const id = generateId("TD");
+  return { title, description, id };
 };
 
 const addNewList = function(req, res, next) {
   const userId = getUserIdByCookie(req.headers.cookie);
-  const list = getList(req.body);
-  const existingTodos = usersDetails[userId].toDos; // think for a good name
-  existingTodos.push(list);
+  const { title, description, id } = getList(req.body);
+  const currentUser = usersDetails[userId];
+  currentUser.createToDo(title, description, id);
   writer(LISTS_DETAILS_FILE, toString(usersDetails));
   next();
 };
@@ -152,7 +156,7 @@ const getTasks = function(req, res) {
   send(res, form + html);
 };
 
-const renderNewTaskForm = function(req, res, next) {
+const renderNewTaskForm = function(req, res) {
   const form = templates.newTaskForm;
   send(res, form);
 };
@@ -165,7 +169,12 @@ const renderConfirmDeletionForm = function(req, res) {
 
 const updateTaskList = function(userId, listId, taskDescription) {
   const taskId = generateId("task");
-  usersDetails[userId].addToDoItem(listId, taskDescription,DEFAULT_TASK_STATUS , taskId);
+  usersDetails[userId].addToDoItem(
+    listId,
+    taskDescription,
+    DEFAULT_TASK_STATUS,
+    taskId
+  );
   writer(LISTS_DETAILS_FILE, toString(usersDetails));
 };
 
