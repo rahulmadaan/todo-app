@@ -196,13 +196,10 @@ const deleteList = function(req, res) {
     req.headers.cookie,
     req.headers.referer
   );
-  const currentUserToDos = usersDetails[userId].toDos;
-  const remainingToDos = currentUserToDos.filter(list => list.id != listId);
-  usersDetails[userId].toDos = remainingToDos;
+  const currentUser = usersDetails[userId];
+  currentUser.deleteToDo(listId);
   writer(USERS_DETAILS_FILE, toString(usersDetails));
-  res.writeHead(REDIRECTION_CODE, {
-    location: "/dashboard.html"
-  });
+  redirectTo(res,"/dashboard.html");
   res.end();
 };
 
@@ -231,7 +228,6 @@ const editTaskDescription = function(req, res) {
   writer(USERS_DETAILS_FILE, toString(usersDetails));
   res.end();
 };
-
 
 app.use(readBody);
 app.use(formatContent);

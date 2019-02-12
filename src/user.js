@@ -28,7 +28,7 @@ class User {
   }
   deleteToDo(toDoId) {
     const updatedToDo = this.getToDos().filter(toDo => toDo.id != toDoId);
-    this.setTasks(updatedToDo);
+    this.toDos = updatedToDo;
   }
   addToDoItem(toDoId, description, status, id) {
     const requiredTodo = this.getRequestedToDo(toDoId);
