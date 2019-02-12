@@ -1,8 +1,7 @@
 const { writeFile, readFileSync } = require("fs");
 const RequestHandler = require("./frameWork.js");
 const {
-  TASKS_DETAILS_FILE,
-  LISTS_DETAILS_FILE,
+  USERS_DETAILS_FILE,
   REDIRECTION_CODE,
   DEFAULT_TASK_STATUS
 } = require("./constants.js");
@@ -19,7 +18,7 @@ const {
   extractFirstElement
 } = require("./util.js");
 
-const usersDetails = JSON.parse(readFileSync(LISTS_DETAILS_FILE, "utf8"));
+const usersDetails = JSON.parse(readFileSync(USERS_DETAILS_FILE, "utf8"));
 const userIds = Object.keys(usersDetails);
 userIds.map(user => {
   usersDetails[user] = User.parse(usersDetails[user]);
@@ -112,7 +111,7 @@ const addNewList = function(req, res, next) {
   const { title, description, id } = getList(req.body);
   const currentUser = usersDetails[userId];
   currentUser.createToDo(title, description, id);
-  writer(LISTS_DETAILS_FILE, toString(usersDetails));
+  writer(USERS_DETAILS_FILE, toString(usersDetails));
   next();
 };
 
@@ -175,7 +174,7 @@ const updateTaskList = function(userId, listId, taskDescription) {
     DEFAULT_TASK_STATUS,
     taskId
   );
-  writer(LISTS_DETAILS_FILE, toString(usersDetails));
+  writer(USERS_DETAILS_FILE, toString(usersDetails));
 };
 
 const addTaskInList = function(req, res, next) {
@@ -200,7 +199,7 @@ const deleteList = function(req, res) {
   const currentUserToDos = usersDetails[userId].toDos;
   const remainingToDos = currentUserToDos.filter(list => list.id != listId);
   usersDetails[userId].toDos = remainingToDos;
-  writer(LISTS_DETAILS_FILE, toString(usersDetails));
+  writer(USERS_DETAILS_FILE, toString(usersDetails));
   res.writeHead(REDIRECTION_CODE, {
     location: "/dashboard.html"
   });
@@ -225,19 +224,15 @@ const editTaskDescription = function(req, res) {
     req.headers.cookie,
     req.headers.referer
   );
-  const editedTaskDetails = parseUserInput(req.body);
-  const { taskDescription, taskId } = editedTaskDetails;
-  const parsedUsersToDos = usersDetails[userId].toDos.map(toDo =>
-    ToDo.parse(toDo)
-  );
-  usersDetails[userId].toDos = parsedUsersToDos;
-  const requestedToDo = getRequestedEntity(usersDetails[userId].toDos, listId);
-  const requestedTask = getRequestedEntity(requestedToDo.tasks, taskId);
-  requestedTask.editDescription(taskDescription);
+  const { taskDescription, taskId } = parseUserInput(req.body);
+  const userTodos = usersDetails[userId];
+  userTodos.editItemDescription(listId, taskId, taskDescription);
   redirectTo(res, req.headers.referer);
-  writer(TASKS_DETAILS_FILE, toString(usersDetails));
+  writer(USERS_DETAILS_FILE, toString(usersDetails));
   res.end();
 };
+
+
 app.use(readBody);
 app.use(formatContent);
 app.use(logRequests);

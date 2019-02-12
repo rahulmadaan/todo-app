@@ -1,6 +1,6 @@
 const Task = require("./task");
 const ToDo = require("./toDo");
-const { getFirstElement } = require("./util.js");
+const { extractFirstElement } = require("./util.js");
 class User {
   constructor(userName, password, id, toDos = []) {
     this.userName = userName;
@@ -16,7 +16,7 @@ class User {
 
   getRequestedToDo(todoId) {
     const requestedToDo = this.toDos.filter(todo => todo.id == todoId);
-    return getFirstElement(requestedToDo);
+    return extractFirstElement(requestedToDo);
   }
 
   getToDos() {
@@ -32,7 +32,15 @@ class User {
   }
   addToDoItem(toDoId, description, status, id) {
     const requiredTodo = this.getRequestedToDo(toDoId);
-    requiredTodo.addTask(description, status, id);
+    requiredTodo.addTask(description, id, status);
+  }
+  editItemDescription(todoId, taskId, updatedDescription) {
+    const allTodos = this.toDos;
+    const requiredTodo = extractFirstElement(
+      allTodos.filter(todo => todo.id == todoId)
+    );
+    requiredTodo.editTaskDescription(taskId, updatedDescription);
+    this.toDos = allTodos;
   }
 }
 
