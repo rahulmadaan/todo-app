@@ -8,9 +8,19 @@
     <main class="mingleMain">
       <header class="mingleThemeHeader"><h1>Welcome To What TO DO</h1></header>
       <div class="signInBox">
-        <h2>Sign In</h2>
-        <form action="/login" method="POST" style="width:270px;margin:0 auto">
-          <lable>Username &#x270D;:</lable> <br />
+        <h2>Sign Up</h2>
+        <form action="/signup" method="POST" style="width:270px;margin:0 auto">
+          <label>Name:</label><br />
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+            required
+            style="width:240px; height:30px;font-size: 20px;border-radius:7.25px"
+          />
+          <br />
+          <br />
+          <label>Username:</label> <br />
           <input
             type="text"
             name="username"
@@ -18,9 +28,10 @@
             required
             style="width:240px; height:30px;font-size: 20px;border-radius:7.25px"
           />
+
           <br />
           <br />
-          <lable>Password:</lable><br />
+          <label>Password:</label><br />
           <input
             type="password"
             name="password"
@@ -32,12 +43,12 @@
           <br />
           <input
             type="submit"
-            value="Sign In"
+            value="Sign up"
             style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px"
           />
         </form>
-        <h4>No Account?? Don't worry</h4>
-        <a href="/signup.html">Sign up</a>
+        <h4>Have an account??</h4>
+        <a href="/login.html">Login</a>
       </div>
     </main>
   </body>

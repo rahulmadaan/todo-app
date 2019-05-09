@@ -19,6 +19,7 @@ const {
 } = require("./util.js");
 
 const usersDetails = JSON.parse(readFileSync(USERS_DETAILS_FILE, "utf8"));
+
 const userIds = Object.keys(usersDetails);
 userIds.map(user => {
   usersDetails[user] = User.parse(usersDetails[user]);
@@ -49,7 +50,10 @@ const parseUserInput = function(userInput) {
 const isDetailsMatching = function(userDetails) {
   const userName = userDetails.username;
   const password = userDetails.password;
-  return (userName == "rahulma") & (password == 1234);
+  if (usersDetails[userName]) {
+    return usersDetails[userName].password === password;
+  }
+  return false;
 };
 
 const validateUser = function(req, res, next) {
@@ -58,7 +62,7 @@ const validateUser = function(req, res, next) {
   if (isDetailsMatching(userDetails)) {
     res.writeHead(REDIRECTION_CODE, {
       Location: "/Dashboard.html",
-      "Set-Cookie": "userId=rahulma"
+      "Set-Cookie": "userId=" + userId
     });
 
     next();
@@ -199,7 +203,7 @@ const deleteList = function(req, res) {
   const currentUser = usersDetails[userId];
   currentUser.deleteToDo(listId);
   writer(USERS_DETAILS_FILE, toString(usersDetails));
-  redirectTo(res,"/dashboard.html");
+  redirectTo(res, "/dashboard.html");
   res.end();
 };
 
@@ -229,12 +233,25 @@ const editTaskDescription = function(req, res) {
   res.end();
 };
 
+const addNewUser = function(req, res) {
+  const newUser = parseUserInput(req.body);
+  const { name, username, password } = newUser;
+  usersDetails[name] = {
+    userName: name,
+    password,
+    id: username,
+    toDos: []
+  };
+  writer(USERS_DETAILS_FILE, toString(usersDetails));
+  send(res, "ok");
+  res.end();
+};
 app.use(readBody);
 app.use(formatContent);
 app.use(logRequests);
 
 app.post("/login", validateUser);
-
+app.post("/signup", addNewUser);
 app.post("/dashboard.html", addNewList);
 app.get("/viewList", viewList);
 app.get("/confirmDeletion", renderConfirmDeletionForm);
