@@ -1,40 +1,41 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>What To Do-Dashboard></></title>
-		<link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-	</head>
-	<body style="background-color: rgb(15, 147, 199)">
-		<script src="./dashboard.js"></script>
-		<main>
-			<header class="mingleThemeHeader"><h1>What To Do </h1></header>
-			<hr />
-			<div class="addNewList">
-				<form action="/dashboard.html" method="POST" class="newListForm">
-					<label>
-						<strong> <u> Title </u></strong></label
-					>
-					<input
-						type="text"
-						name="title"
-						placeholder="Add Title"
-						class="inputTitle"
-						required
-					/>
-					<label>
-						<strong><u>Description</u> </strong></label
-					>
-					<input
-						type="text"
-						name="description"
-						placeholder="Add description"
-						class="inputDescription"
-						required
-					/>
-					<input type="submit" value="Add New List" class="inputButton" />
-				</form>
-			</div>
-		</main>
-		<div id="listBlock"></div>
-	</body>
+  <head>
+    <title>What To Do-Dashboard></></title>
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  </head>
+  <body style="background-color: rgb(15, 147, 199)">
+    <script src="./dashboard.js"></script>
+    <main>
+      <header class="mingleThemeHeader"><h1>What To Do</h1></header>
+      <hr />
+      <button style="float: right; " onclick="logout()">Logout</button>
+      <div class="addNewList">
+        <form action="/dashboard.html" method="POST" class="newListForm">
+          <label>
+            <strong> <u> Title </u></strong></label
+          >
+          <input
+            type="text"
+            name="title"
+            placeholder="Add Title"
+            class="inputTitle"
+            required
+          />
+          <label>
+            <strong><u>Description</u> </strong></label
+          >
+          <input
+            type="text"
+            name="description"
+            placeholder="Add description"
+            class="inputDescription"
+            required
+          />
+          <input type="submit" value="Add New List" class="inputButton" />
+        </form>
+      </div>
+    </main>
+    <div id="listBlock"></div>
+  </body>
 </html>

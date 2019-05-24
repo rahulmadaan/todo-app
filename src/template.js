@@ -1,5 +1,5 @@
 const templates = {
-	viewTask: `<html>
+  viewTask: `<html>
 	<head>
 		<title>What To-Do App  </title>
 		<link rel="stylesheet" href="main.css" />
@@ -7,7 +7,7 @@ const templates = {
 	</head>
 	<body>
 		<main>
-			<div class="viewListHeader" xz>
+			<div class="viewListHeader">
 				<header style="text-align:center">
 					<h1><u>Your List  <a href="/dashBoard.html">&#x1F3E0;</a></u></h1>
 					</header>
@@ -20,13 +20,16 @@ const templates = {
 						</thead>						
 						</table>
 						<button type="submit" value='addTask' id="addNewTaskButton" onclick = addTaskInterface()> Create new Task</button>
-						<div id="addNewTask"></div>
+						<div id = "main-task">
+							<div id="addNewTask"></div>
+							<div id = "edit"> </div>
+						</div>
 			</div>
 		</main>
 	</body>
 </html>
 `,
-	newTaskForm: `<form
+  newTaskForm: `<form
 action="/addNewTask"
 method="POST"
 style="width:680px;
@@ -49,7 +52,7 @@ text-align:center;"
 <button type="button" onclick = "clearConfirmationDiv()" style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px; margin-left:10px;">Cancel</button>
 </form>`,
 
-	confirmDeletion: listId => `<form
+  confirmDeletion: listId => `<form
 	action=/deleteList?listId=${listId};
 method="POST"
 style="width:680px;
@@ -65,7 +68,7 @@ text-align:center;"
 <button type="button" onclick = "clearConfirmationDiv()" style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px; margin-left:10px;">Cancel</button>
 </form>`,
 
-	taskEditingForm: `<form
+  taskEditingForm: `<form
 	 action="/editTask"
 	 method="POST"
 style="width:680px;
@@ -91,7 +94,7 @@ style="width:150px; height:30px;font-size: 20px;border-radius: 7.25px"
 </form>`
 };
 {
-	/* <input
+  /* <input
 	type="text"
 	name="taskDescription"
 	id="taskEditingForm"
