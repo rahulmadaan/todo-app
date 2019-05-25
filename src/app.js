@@ -97,7 +97,6 @@ const addNewList = function(req, res, next) {
   const { title, description, id } = getList(req.body);
   const currentUser = usersDetails[userId];
   currentUser.createToDo(title, description, id);
-  console.log("working fine till here");
   writer(USERS_DETAILS_FILE, toString(usersDetails));
   res.redirect("./dashboard.html");
   next();
@@ -172,7 +171,6 @@ const addTaskInList = function(req, res, next) {
   );
   const { userId } = req.cookies;
   const task = req.body.taskDescription;
-  console.log("body is ", req.body);
 
   updateTaskList(userId, listId, task);
   res.redirect(req.headers.referer);
@@ -213,7 +211,7 @@ const addNewUser = function(req, res) {
     toDos: []
   };
   writer(USERS_DETAILS_FILE, toString(usersDetails));
-  res.send("ok");
+  res.redirect("/");
   res.end();
 };
 app.use(logRequests);
